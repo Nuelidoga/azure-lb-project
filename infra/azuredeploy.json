@@ -7,7 +7,7 @@
     "adminUsername": { "type": "string", "defaultValue": "azureuser" },
     "sshPublicKey": { "type": "string" },
     "vmSize": { "type": "string", "defaultValue": "Standard_B2ts_v2" },
-    "probePort": { "type": "int", "defaultValue": 80 },
+    "probePort": { "type": "int", "defaultValue": 8080 },
     "alertEmail": { "type": "string" }
   },
   "variables": {
