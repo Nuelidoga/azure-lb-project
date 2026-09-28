@@ -127,4 +127,4 @@ az group delete -n rg-lbdemo --yes --no-wait
 
 ## Write-up
 
-Full walkthrough with screenshots: [add blog link here]
+Full walkthrough with screenshots: https://medium.com/@idoganuel25/i-broke-my-own-azure-infrastructure-on-purpose-heres-what-it-taught-me-about-real-world-devops-9c1030bf6d0f
