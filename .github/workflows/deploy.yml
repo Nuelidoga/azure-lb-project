@@ -25,7 +25,26 @@ jobs:
         run: |
           az deployment group what-if -g $RG -f infra/azuredeploy.json \
             -p sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}" alertEmail="${{ secrets.ALERT_EMAIL }}"
-
+  smoke-test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Get load balancer IP
+        id: getip
+        run: |
+          IP=$(az network public-ip show -g $RG -n lbdemo-pip --query ipAddress -o tsv)
+          echo "ip=$IP" >> "$GITHUB_OUTPUT"
+      - name: Smoke test the endpoint
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "http://${{ steps.getip.outputs.ip }}")
+          echo "Got status $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "::error::Smoke test failed — endpoint returned $STATUS instead of 200"
+            exit 1
+          fi
   deploy:
     needs: validate
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
